@@ -51,7 +51,9 @@
 
       </ul>
     </div>
-    <shopcart></shopcart>
+    <shopcart v-if="seller"
+              :deliveryPrice="seller.deliveryPrice"
+              :minPrice="seller.minPrice"></shopcart>
   </div>
 </template>
 
