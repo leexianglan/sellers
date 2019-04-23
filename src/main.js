@@ -36,10 +36,11 @@ const router = new VueRouter({
   routes: routers,
   linkActiveClass: 'active'
 })
+/* eslint-disable no-unused-vars */
 const app = new Vue({
   router,
   render: h => h(App)
 }).$mount('#app')
 
-router.push('/goods')
-console.log(app)
+// router.push('/goods')
+// console.log(app)

@@ -44,7 +44,8 @@
                         v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  <cartcontrol :food="food"></cartcontrol>
+                  <cartcontrol @add="drop"
+                               :food="food"></cartcontrol>
                 </div>
               </div>
 
@@ -56,7 +57,9 @@
     </div>
     <shopcart v-if="seller"
               :deliveryPrice="seller.deliveryPrice"
-              :minPrice="seller.minPrice"></shopcart>
+              :minPrice="seller.minPrice"
+              :select-foods="selectFood"
+              ref="shopcart"></shopcart>
   </div>
 </template>
 
@@ -105,6 +108,9 @@ export default {
       )[index]
       this.goodScroll.scrollToElement(food, 300)
     },
+    drop(target) {
+      this.$refs.shopcart.drop(target)
+    },
     _initScroll() {
       this.menuScroll = new BScroll(this.$refs.menuWrapper, {
         click: true
@@ -142,6 +148,17 @@ export default {
         }
       }
       return 0
+    },
+    selectFood() {
+      let list = []
+      this.goods.forEach(good => {
+        good.foods.forEach(food => {
+          if (food.count > 0) {
+            list.push(food)
+          }
+        })
+      })
+      return list
     }
   },
   components: {

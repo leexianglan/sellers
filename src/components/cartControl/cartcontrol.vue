@@ -2,13 +2,13 @@
   <div class="cartcontrol">
     <transition name="move">
       <div class="cart-decrease"
-           v-show="food.count > 0"
+           v-show="food && food.count > 0"
            @click="decreaseCart">
         <i class="inner icon-remove_circle_outline"></i>
       </div>
     </transition>
     <div class="cart-count"
-         v-show="food.count > 0">{{food.count}}</div>
+         v-show="food && food.count > 0">{{food.count}}</div>
     <div class="cart-add"
          @click="addCart">
       <i class="icon-add_circle"></i>
@@ -18,6 +18,7 @@
 
 <script type='text/ecmascript-6'>
 import Vue from 'vue'
+import Bus from '../../common/js/EventBus.js'
 
 export default {
   props: {
@@ -30,18 +31,27 @@ export default {
     return {}
   },
   methods: {
-    addCart() {
-      if (!this.food.count) {
-        Vue.set(this.food, 'count', 0)
+    addCart(event) {
+      if (!event._constructed) {
+        return
       }
-      this.food.count++
+      if (!this.food.count) {
+        Vue.set(this.food, 'count', 1)
+      } else {
+        this.food.count++
+      }
+      this.$emit('add', event.target)
     },
-    decreaseCart() {
+    decreaseCart(event) {
+      if (!event._constructed) {
+        return
+      }
       this.food.count--
     }
   },
   components: {
-    Vue
+    Vue,
+    Bus
   }
 }
 </script>
@@ -65,7 +75,7 @@ export default {
       .inner
         transition all 1s
         transform rotate(0)
-    &.move-enter, &.move-leave-active
+    &.move-enter, &.move-leave-to
       opacity 0
       transform translate3d(24px, 0, 0)
       .inner
